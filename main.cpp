@@ -19,7 +19,6 @@ void setup() {
   Lcd.init ();
   Lcd.backlight();
   pinMode(4, INPUT_PULLUP);
-  Serial.begin(9600);
   x = 16;
   d = 400;
   for (int i = 0; i < fLen; i++) {
@@ -48,7 +47,7 @@ void loop() {
     if (fx[m] > -1)
       fx[m]--;
     else
-      newF(m);
+      fx[m] = random(18, 41);
     Lcd.setCursor(fx[m], 1);
     Lcd.print("f");
   }
@@ -57,14 +56,16 @@ void loop() {
     if (mx[m] > -1)
       mx[m]--;
     else
-      newM(m);
+      mx[m] = random(18, 41);
     Lcd.setCursor(mx[m], 0);
     Lcd.print("m");
   }
-  
+
   kollision();
-for (int m = 0; m < mLen; m++){
-  
+  for (int m = 0; m < mLen; m++) {
+    for (int i = 0; i < mLen; i++)
+      if (fx[i] == mx[m] )
+        mx[m] = -1;
   }
   delay (d);
   Lcd.clear();
@@ -88,30 +89,8 @@ void gameOver() {
   delay(2000);
 }
 
-void newF (int index) {
-  bool flag = true;
-  int newVal;
-  while (flag) {
-    newVal = random(16, 41);
-    flag = false;
-    for (int m = 0; m < mLen; m++)
-      if (mx[m] == newVal)
-        flag = true;
-  }
-  fx[index] = newVal;
-}
-void newM (int index) {
-  bool flag = true;
-  int newVal;
-  while (flag) {
-    newVal = random(16, 41);
-    flag = false;
-    for (int m = 0; m < fLen; m++)
-      if (fx[m] == newVal)
-        flag = true;
-  }
-  mx[index] = newVal;
-}
+
+
 void kollision() {
   for (int s = 0; s < fLen; s++) {
     if (i == 1 && fx[s] == 3) {
